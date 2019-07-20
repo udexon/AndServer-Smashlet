@@ -30,6 +30,7 @@ import com.yanzhenjie.andserver.util.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by Zhenjie Yan on 2018/6/9.
@@ -51,12 +52,44 @@ class TestController {
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     String login(HttpRequest request, HttpResponse response, @RequestParam(name = "account") String account,
                  @RequestParam(name = "password") String password) {
+        
+        /*
         Session session = request.getValidSession();
         session.setAttribute(LoginInterceptor.LOGIN_ATTRIBUTE, true);
 
         Cookie cookie = new Cookie("account", account + "=" + password);
         response.addCookie(cookie);
-        return "Login successful.";
+        */
+        
+        String[] ta = account.split(" ", 0);
+
+        int tl = ta.length;
+        int i=0, ti;
+        String t, MR="";
+
+        Stack<String> S = new Stack<String>();
+
+        while(i<tl) {
+            t=ta[i];
+
+            if (t.equals("+")) {
+
+                S.push( Integer.toString(Integer.parseInt(S.pop()) + Integer.parseInt( S.pop() ) ));
+
+            }
+            else if (t.equals("t:")) {
+
+                MR = S.pop();
+
+            }
+            else
+                S.push(t);
+
+            i++;
+        }
+
+        return " MR "+ MR +" S.size " + S.size() + " tl " + ta.length + " " + account +" Login successful.";
+        // return "Login successful.";
     }
 
     @Addition(stringType = "login", booleanType = true)
